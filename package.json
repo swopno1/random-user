@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "This will return with random user data from the api.",
   "main": "index.js",
+  "engines": "16.x",
   "scripts": {
     "start": "node index.js",
     "start-dev": "nodemon index.js",
