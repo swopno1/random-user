@@ -1,11 +1,17 @@
 const express = require("express");
 const fs = require("fs");
+const path = require("path");
 
 const router = express.Router();
 
+const filepath = path.join(
+  process.env.VERCEL_SERVERLESS_FUNCTIONS_FS_PATH,
+  "users.json"
+);
+
 // GET a RANDOM user
 router.get("/random", (req, res) => {
-  fs.readFile("users.json", (err, data) => {
+  fs.readFile(filepath, (err, data) => {
     if (err) {
       console.error(err);
       return res.status(500).send("Internal server error");
@@ -19,7 +25,7 @@ router.get("/random", (req, res) => {
 
 // GET endpoint to fetch all users
 router.get("/all", (req, res) => {
-  const users = JSON.parse(fs.readFileSync("users.json"));
+  const users = JSON.parse(fs.readFileSync(filepath));
   const limit = req.query.limit || users.length;
   const filteredUsers = users.slice(0, limit);
   res.status(201).json(filteredUsers);
@@ -34,7 +40,7 @@ router.post("/save", (req, res) => {
     return res.status(400).send("Name, contact, and gender is required");
   }
 
-  fs.readFile("users.json", (err, data) => {
+  fs.readFile(filepath, (err, data) => {
     if (err) {
       console.error(err);
       return res.status(500).send("Internal server error");
@@ -42,7 +48,7 @@ router.post("/save", (req, res) => {
     const users = JSON.parse(data);
     newUser.id = users.length + 1;
     users.push(newUser);
-    fs.writeFile("users.json", JSON.stringify(users), (err) => {
+    fs.writeFile(filepath, JSON.stringify(users), (err) => {
       if (err) {
         console.error(err);
         return res.status(500).send("Internal server error");
@@ -55,14 +61,14 @@ router.post("/save", (req, res) => {
 // PUT endpoint to update a user
 router.put("/update", (req, res) => {
   const updatedUser = req.body;
-  const users = JSON.parse(fs.readFileSync("users.json"));
+  const users = JSON.parse(fs.readFileSync(filepath));
 
   const userIndex = users.findIndex((user) => user.id === updatedUser.id);
   if (userIndex === -1) {
     return res.status(404).json({ error: "User not found" });
   }
   users[userIndex] = { ...users[userIndex], ...updatedUser };
-  fs.writeFileSync("users.json", JSON.stringify(users));
+  fs.writeFileSync(filepath, JSON.stringify(users));
   res.json(users[userIndex]);
 });
 
@@ -73,7 +79,7 @@ router.put("/update", (req, res) => {
 router.put("/bulk-update", (req, res) => {
   const bulkUsers = req.body;
 
-  const users = JSON.parse(fs.readFileSync("users.json"));
+  const users = JSON.parse(fs.readFileSync(filepath));
 
   const updatedUsers = [];
 
@@ -87,21 +93,21 @@ router.put("/bulk-update", (req, res) => {
     updatedUsers.push(users[userIndex]);
   });
 
-  fs.writeFileSync("users.json", JSON.stringify(users));
+  fs.writeFileSync(filepath, JSON.stringify(users));
   res.json(updatedUsers);
 });
 
 router.delete("/delete", (req, res) => {
   const targetUser = req.body;
   //   console.log(targetUser);
-  const users = JSON.parse(fs.readFileSync("users.json"));
+  const users = JSON.parse(fs.readFileSync(filepath));
   const userIndex = users.findIndex((user) => user.id == targetUser.id);
 
   if (userIndex === -1) {
     return res.status(404).json({ error: "User not found" });
   }
   const deletedUser = users.splice(userIndex, 1)[0];
-  fs.writeFileSync("users.json", JSON.stringify(users));
+  fs.writeFileSync(filepath, JSON.stringify(users));
   res.json(deletedUser);
 });
 
