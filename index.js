@@ -10,6 +10,7 @@ const port = process.env.PORT || 3000;
 
 // Use middleware
 app.use(cors());
+app.use(express.json());
 
 // Base api url
 app.get("/", (req, res) => {
