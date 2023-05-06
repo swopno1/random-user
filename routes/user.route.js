@@ -9,12 +9,11 @@ router.get("/random", (req, res) => {
     if (err) {
       console.error(err);
       return res.status(500).send("Internal server error");
-    } else {
-      const users = JSON.parse(data);
-      const randomIndex = Math.floor(Math.random() * users.length);
-      const randomUser = users[randomIndex];
-      res.status(201).json(randomUser);
     }
+    const users = JSON.parse(data);
+    const randomIndex = Math.floor(Math.random() * users.length);
+    const randomUser = users[randomIndex];
+    res.status(201).json(randomUser);
   });
 });
 
@@ -56,14 +55,14 @@ router.post("/save", (req, res) => {
 // PUT endpoint to update a user
 router.put("/update", (req, res) => {
   const updatedUser = req.body;
-  const users = JSON.parse(fs.readFile("users.json"));
+  const users = JSON.parse(fs.readFileSync("users.json"));
 
   const userIndex = users.findIndex((user) => user.id === updatedUser.id);
   if (userIndex === -1) {
     return res.status(404).json({ error: "User not found" });
   }
   users[userIndex] = { ...users[userIndex], ...updatedUser };
-  fs.writeFile("users.json", JSON.stringify(users));
+  fs.writeFileSync("users.json", JSON.stringify(users));
   res.json(users[userIndex]);
 });
 
@@ -72,18 +71,37 @@ router.put("/update", (req, res) => {
 // Take an array of user ids and assign it to the body.
 // BONUS: validate the body.
 router.put("/bulk-update", (req, res) => {
-  res.send("Bulk update not yet ready!");
+  const bulkUsers = req.body;
+
+  const users = JSON.parse(fs.readFileSync("users.json"));
+
+  const updatedUsers = [];
+
+  bulkUsers.map((updatedUser) => {
+    const userIndex = users.findIndex((user) => user.id === updatedUser.id);
+    if (userIndex === -1) {
+      updatedUsers.push({ status: `User ${updatedUser.name} not found!` });
+    }
+    users[userIndex] = { ...users[userIndex], ...updatedUser };
+
+    updatedUsers.push(users[userIndex]);
+  });
+
+  fs.writeFileSync("users.json", JSON.stringify(users));
+  res.json(updatedUsers);
 });
 
 router.delete("/delete", (req, res) => {
   const targetUser = req.body;
-  const users = JSON.parse(fs.readFile("users.json"));
-  const userIndex = users.findIndex((user) => user.id === targetUser.id);
+  //   console.log(targetUser);
+  const users = JSON.parse(fs.readFileSync("users.json"));
+  const userIndex = users.findIndex((user) => user.id == targetUser.id);
+
   if (userIndex === -1) {
     return res.status(404).json({ error: "User not found" });
   }
   const deletedUser = users.splice(userIndex, 1)[0];
-  fs.writeFile("users.json", JSON.stringify(users));
+  fs.writeFileSync("users.json", JSON.stringify(users));
   res.json(deletedUser);
 });
 
