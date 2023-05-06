@@ -13,7 +13,7 @@ app.use(cors());
 
 // Base api url
 app.get("/", (req, res) => {
-  res.json({ message: "Hello, world!" });
+  res.json({ message: "Welcome to random user api!" });
 });
 
 // GET a RANDOM user
@@ -33,7 +33,7 @@ app.get("/user/random", (req, res) => {
 
 // GET endpoint to fetch all users
 app.get("/user/all", (req, res) => {
-  const users = JSON.parse(fs.readFile("users.json"));
+  const users = JSON.parse(fs.readFileSync("users.json"));
   const limit = req.query.limit || users.length;
   const filteredUsers = users.slice(0, limit);
   res.status(201).json(filteredUsers);
