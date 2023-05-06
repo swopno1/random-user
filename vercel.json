@@ -16,10 +16,7 @@
     "index.js": {
       "runtime": "nodejs16.x",
       "memory": 1024,
-      "maxDuration": 30,
-      "fs": {
-        "maxSize": "100mb"
-      }
+      "maxDuration": 30
     }
   }
 }
