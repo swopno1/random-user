@@ -33,7 +33,7 @@ app.get("/user/random", (req, res) => {
 
 // GET endpoint to fetch all users
 app.get("/user/all", (req, res) => {
-  const users = JSON.parse(fs.readFileSync("users.json"));
+  const users = JSON.parse(fs.readFile("users.json"));
   const limit = req.query.limit || users.length;
   const filteredUsers = users.slice(0, limit);
   res.status(201).json(filteredUsers);
@@ -90,13 +90,13 @@ app.put("/user/bulk-update", (req, res) => {});
 // DELETE endpoint to delete a user
 app.delete("/users/delete", (req, res) => {
   const targetUser = req.body;
-  const users = JSON.parse(fs.readFileSync("users.json"));
+  const users = JSON.parse(fs.readFile("users.json"));
   const userIndex = users.findIndex((user) => user.id === targetUser.id);
   if (userIndex === -1) {
     return res.status(404).json({ error: "User not found" });
   }
   const deletedUser = users.splice(userIndex, 1)[0];
-  fs.writeFileSync("users.json", JSON.stringify(users));
+  fs.writeFile("users.json", JSON.stringify(users));
   res.json(deletedUser);
 });
 
