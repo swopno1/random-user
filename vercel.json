@@ -8,8 +8,12 @@
   ],
   "functions": {
     "index.js": {
+      "runtime": "nodejs14.x",
       "memory": 1024,
-      "maxDuration": 10
+      "maxDuration": 30,
+      "fs": {
+        "maxSize": "100mb"
+      }
     }
   }
 }
