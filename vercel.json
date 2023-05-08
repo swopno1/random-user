@@ -10,7 +10,7 @@
     "index.js": {
       "runtime": "nodejs14.x",
       "memory": 1024,
-      "maxDuration": 30
+      "maxDuration": 10
     }
   }
 }
