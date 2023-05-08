@@ -68,7 +68,7 @@ router.put("/update", (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     users[userIndex] = { ...users[userIndex], ...updatedUser };
-    fs.writeFileSync(filepath, JSON.stringify(users));
+    fs.writeFileSync(filePath, JSON.stringify(users));
     res.status(200).json(users[userIndex]);
   } catch (err) {
     console.error(err);
@@ -116,7 +116,7 @@ router.delete("/delete", (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     const deletedUser = users.splice(userIndex, 1)[0];
-    fs.writeFileSync(filepath, JSON.stringify(users));
+    fs.writeFileSync(filePath, JSON.stringify(users));
     res.status(200).json(deletedUser);
   } catch (err) {
     console.error(err);
