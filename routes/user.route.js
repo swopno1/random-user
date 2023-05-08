@@ -18,7 +18,7 @@ router.get("/random", (req, res) => {
     res.status(200).json(randomUser);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send(err);
   }
 });
 
@@ -31,7 +31,7 @@ router.get("/all", (req, res) => {
     res.status(200).json(filteredUsers);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send(err);
   }
 });
 
@@ -53,7 +53,7 @@ router.post("/save", (req, res) => {
     return res.status(200).json(newUser);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send(err);
   }
 });
 
@@ -72,7 +72,7 @@ router.put("/update", (req, res) => {
     res.status(200).json(users[userIndex]);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send(err);
   }
 });
 
@@ -101,7 +101,7 @@ router.put("/bulk-update", (req, res) => {
     res.status(200).json(updatedUsers);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send(err);
   }
 });
 
@@ -120,7 +120,7 @@ router.delete("/delete", (req, res) => {
     res.status(200).json(deletedUser);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send(err);
   }
 });
 
